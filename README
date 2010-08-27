@@ -1,0 +1,13 @@
+This repository consists of all the programs I write as I try to learn OpenGL 4.0. I give a short description of what each program does in this readme.
+
+makefile
+--------
+The makefile is currently set only to compile first_glut.cpp and to do cleanup.
+
+first_glut
+----------
+Contains a glut based program that demonstrates three different ways of drawing a plain white square.
+Methods:
+1. Fixed Function Pipeline stuff.
+2. Vertex Arrays
+3. Vertex Buffer Objects, Vertex Array Objects and shaders.
