@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "GL/glut.h"
 
 //Freeglut pulls these in anyway
@@ -16,6 +17,59 @@ void init(void)
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 	*/
+}
+
+/*
+ * Reads the contents of a file and stores them in a c_string. 
+ * The c_string is allocated dynamically. If 
+ * there is any error at any stage, a null c_string is returned.
+ * Returns: 
+ *         A c style string with the contents of the shader's file.
+ *	   A null string.
+ */
+GLchar* file_to_char_pointer(std::string path_to_file)
+{
+	//TODO: Add exception handling.
+	//TODO: Make this function nicer, so as to use glShaderSource fully.
+
+	GLchar* shader_source_code = NULL;
+	unsigned int file_size;
+
+	//Open the file.
+	std::ifstream shader_file(path_to_file.c_str());
+	//Read in all the lines if the file is open.
+	if(shader_file.is_open())
+	{
+		//Calculate the file's size in bytes
+		
+		//Move the get pointer to the end
+		shader_file.seekg(ios::end);
+		//The position of the get pointer gives the number of bytes
+		file_size = shader_file.tellg();
+		if(file_size != -1)
+		{
+			/* Allocate enough space in the char array to hold
+			 * the file's contents.
+			 */
+			//TODO: Check this code.
+			shader_source_code = new GLchar[file_size];
+			
+			//Send the get pointer back to the beginning.
+			shader_file.seekg(ios::beg);
+			
+			//Read the file into the source code buffer.
+			while(!shader_file.eof())
+			{
+				
+			}
+		}
+			
+	}
+	
+	//Convert the stuff that has been read to a char pointer.
+	//Close the file.
+	shader_file.close();
+	//Return the said pointer.
 }
 
 void display(void)
