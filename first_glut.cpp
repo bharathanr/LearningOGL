@@ -232,17 +232,18 @@ void display(void)
 
 		//Do cleanup.
 		glUseProgram(0);
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
 		glDetachShader(shader_program, vertex_shader);
 		glDetachShader(shader_program, fragment_shader);
 		glDeleteProgram(shader_program);
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
-		glDeleteBuffers(2, vbo_names);
-		glDeleteVertexArrays(1, &vao_name);
 		
 	}
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDeleteBuffers(2, vbo_names);
+	glDeleteVertexArrays(1, &vao_name);
 
 	delete vertex_source;
 	delete fragment_source;	
