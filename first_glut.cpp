@@ -2,13 +2,19 @@
 #include <string>
 #include <fstream>
 #include "GL/glut.h"
+//For OGL 3.2
+#define GL3_PROTOTYPES
+#include "GL3/gl3.h"
+#define __gl_h_
+
+
 //Freeglut pulls these in anyway
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 
 #define DEBUG 1
 
-void init(void)
+void init()
 {
 	/* select clearing (background) color       */
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -225,6 +231,13 @@ void display(void)
 
 int main(int argc, char** argv)
 {
+	//The order of initialisation may be wrong. TODO check.
+
+	//For OGL3.2
+	glutInitContextVersion (3, 2);
+	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
+	//Usual glut code
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(250, 250);
