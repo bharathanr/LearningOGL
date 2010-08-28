@@ -200,9 +200,10 @@ void display(void)
 		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		//Set the source code of the shaders.
-		glShaderSource(vertex_shader, 1, &vertex_source, NULL); 
+		//TODO: Fix this unsafe casting.
+		glShaderSource(vertex_shader, 1, (const GLchar**)&vertex_source, NULL); 
 							//Strings \0 terminated
-		glShaderSource(fragment_shader, 1, &fragment_source, NULL);
+		glShaderSource(fragment_shader, 1, (const GLchar**) &fragment_source, NULL);
 	
 		//Compile the shaders
 		glCompileShader(vertex_shader);
