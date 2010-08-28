@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "GL/glut.h"
+
 //For OGL 3.2
 #define GL3_PROTOTYPES
 #include "GL3/gl3.h"
 #define __gl_h_
+
+#include "GL/freeglut.h"
 
 
 //Freeglut pulls these in anyway
@@ -103,11 +105,12 @@ void display(void)
 {
 	/* clear all pixels */
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	
+	//OLD OGL CODE
 	/* draw white polygon (rectangle) with corners at
 	 * (0.25, 0.25, 0.0) and (0.75, 0.75, 0.0)
 	 */
-	glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(1.0, 1.0, 1.0);
 	
 	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
 				 0.25, 0.75, 0.0};
