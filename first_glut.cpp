@@ -200,7 +200,7 @@ void display(void)
 		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		//Set the source code of the shaders.
-		//TODO: Fix this unsafe casting.
+		//Fix this unsafe casting.
 		glShaderSource(vertex_shader, 1, (const GLchar**)&vertex_source, NULL); 
 							//Strings \0 terminated
 		glShaderSource(fragment_shader, 1, (const GLchar**) &fragment_source, NULL);
@@ -224,12 +224,26 @@ void display(void)
 
 		//Set this program as the active shader program
 		glUseProgram(shader_program);
-
+		
 		//Draw code.
-//		glDrawElements(GL_TRIANGLES, 6,\
-				 GL_UNSIGNED_INT, );
+		//TODO Hope this works
+		glDrawElements(GL_TRIANGLES, 6,\
+				 GL_UNSIGNED_INT, 0);
 
-		//Do cleanup. :)
+		//Do cleanup.
+		glUseProgram(0);
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDetachShader(shader_program, vertex_shader);
+		glDetachShader(shader_program, fragment_shader);
+		glDeleteProgram(shader_program);
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+		glDeleteBuffers(2, vbo_names);
+		glDeleteVertexArrays(1, &vao_name);
+		
+		delete vertex_source;
+		delete fragment_source;	
 	}
 }
 
