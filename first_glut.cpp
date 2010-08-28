@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "GL/glut.h"
-
 //Freeglut pulls these in anyway
 //#include <GL/gl.h>
 //#include <GL/glu.h>
@@ -51,7 +51,7 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 		//Calculate the file's size in bytes
 		
 		//Move the get pointer to the end
-		shader_file.seekg(0, ios::end);
+		shader_file.seekg(0, std::ios::end);
 		//The position of the get pointer gives the number of bytes
 		file_size = shader_file.tellg();
 		if(file_size != -1)
@@ -63,7 +63,7 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 			shader_source_code = new GLchar[file_size];
 			
 			//Send the get pointer back to the beginning.
-			shader_file.seekg(0, ios::beg);
+			shader_file.seekg(0, std::ios::beg);
 			
 			//Read the file into the source code buffer.
 			int i = 0;	//Gives the position in the buffer to write the 
@@ -76,7 +76,7 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 				/* Get the next character and write it to 
 				 * the buffer. 
 				 */				
-				shader_file.get(&shader_source_code[i]);
+				shader_file.get(shader_source_code[i]);
 				//Step to te next position in the buffer.
 				i++;
 			}
@@ -106,7 +106,7 @@ void display(void)
 	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
 				 0.25, 0.75, 0.0};
 	//Indices assume GL_TRIANGLES  TODO-- check!
-	GLuint square_indices = {1, 2, 3, 1, 4, 3};
+	GLuint square_indices[] = {1, 2, 3, 1, 4, 3};
 	//FFP
 	/*	
 	glBegin(GL_POLYGON);
@@ -140,7 +140,7 @@ void display(void)
 	glGenBuffers(2, vbo_names);
 
 	//Bind the first vbo and indicate that it contains vertex data
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_names[0]);
 
 	/* TODO: See if there is a better spec for vbo access 
 	 * than GL_STATIC_DRAW
@@ -158,7 +158,7 @@ void display(void)
 	glEnableVertexAttribArray(0);
 
 	//Bind the second vbo as being an active buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_names[1]);
 	
 	//Copy the index data to the second vbo
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6, \
@@ -168,55 +168,59 @@ void display(void)
 	 * n the vertex attribute array. Enable the corresponding attribute 
 	 * in the array.
 	 */
-	glVertexAttribPointer(1, 1, GLint, GL_FALSE, 0, 0);
+	glVertexAttribPointer(1, 1, GL_INT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 
 	//Shaders!	
-	GLchar* vertex_source, fragment_source;
+	GLchar *vertex_source, *fragment_source;
 	GLuint vertex_shader, fragment_shader;
 	GLuint shader_program;
 
 	//Obtain the source for the shader programs.
 	vertex_source = file_to_char_pointer("first_vertex_shader.glsl");
 	fragment_source = file_to_char_pointer("first_fragment_shader.glsl");
+
+	if((vertex_source != NULL) && (fragment_source != NULL))
+	{
 	
-	//Obtain the name for the shader program.
-	shader_program = glCreateProgram();
+		//Obtain the name for the shader program.
+		shader_program = glCreateProgram();
+	
+		//Obtain the names of the shaders
+		vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	//Obtain the names of the shaders
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	//Set the source code of the shaders.
-	glShaderSource(vertex_shader, 1, &vertexsource, NULL); 
+		//Set the source code of the shaders.
+		glShaderSource(vertex_shader, 1, &vertex_source, NULL); 
 							//Strings \0 terminated
-	glShaderSource(fragment_shader, 1, &fragmentsource, NULL);
+		glShaderSource(fragment_shader, 1, &fragment_source, NULL);
 	
-	//Compile the shaders
-	glCompileShader(vertex_shader);
-	glCompileShader(fragment_shader);
+		//Compile the shaders
+		glCompileShader(vertex_shader);
+		glCompileShader(fragment_shader);
 	
-	//Attach the shaders to the program
-	/* TODO: Figure out these lines carefully. Is the order of attaching
-	 * shaders important?
-	 */
-	glAttachShader(shader_program, vertex_shader);
-	glAttachShader(shader_program, fragment_shader);
+		//Attach the shaders to the program
+		/* TODO: Figure out these lines carefully. Is the order of attaching
+		 * shaders important?
+		 */
+		glAttachShader(shader_program, vertex_shader);
+		glAttachShader(shader_program, fragment_shader);
 	
-	//Link the program
-	glLinkProgram(shader_program);
+		//Link the program
+		glLinkProgram(shader_program);
 
-	//Bind parameters to the shader.
-	glBindAttribLocation(shader_program, 0, "in_position");	
+		//Bind parameters to the shader.
+		glBindAttribLocation(shader_program, 0, "in_position");	
 
-	//Set this program as the active shader program
-	glUseProgram(shader_program);
+		//Set this program as the active shader program
+		glUseProgram(shader_program);
 
-	//Draw code.
-	glDrawElements(GL_TRIANGLES, 6,\
-			 GL_UNSIGNED_INT, );
+		//Draw code.
+//		glDrawElements(GL_TRIANGLES, 6,\
+				 GL_UNSIGNED_INT, );
 
-	//Do cleanup. :)
+		//Do cleanup. :)
+	}
 }
 
 int main(int argc, char** argv)
