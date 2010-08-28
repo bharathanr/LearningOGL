@@ -25,7 +25,8 @@ void display(void)
 	 */
 	glColor3f(1.0, 1.0, 1.0);
 	
-	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0, 0.25, 0.75, 0.0};
+	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
+				 0.25, 0.75, 0.0};
 	//Indices assume GL_TRIANGLES  TODO-- check!
 	GLint square_indices = {1, 2, 3, 1, 4, 3};
 	//FFP
@@ -63,13 +64,18 @@ void display(void)
 	//Bind the first vbo and indicate that it contains vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
-	//TODO: See if there is a better spec for vbo access than GL_STATIC_DRAW
+	/*TODO: See if there is a better spec for vbo access 
+	 *than GL_STATIC_DRAW
+	 */
 	
 	//Copy the vertex data from the square array to this buffer 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 12, square, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 12, square,\
+			 GL_STATIC_DRAW);
 	
-	//Specify that the vertex data is going into vertex attribute zero.
-	//in the vertex attribute array. Enable the corresponding attribute in the array.
+	/*Specify that the vertex data is going into vertex attribute zero.
+	 *in the vertex attribute array. Enable the corresponding attribute 
+	 *in the array.
+	 */
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
@@ -77,10 +83,13 @@ void display(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
 	
 	//Copy the index data to the second vbo
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * 6, square_indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * 6, \
+			 square_indices, GL_STATIC_DRAW);
 	
-	//Specify that the index data is going into vertex attribute one
-	//n the vertex attribute array. Enable the corresponding attribute in the array.
+	/*Specify that the index data is going into vertex attribute one
+	 *n the vertex attribute array. Enable the corresponding attribute 
+	 *in the array.
+	 */
 	glVertexAttribPointer(1, 1, GLint, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 
