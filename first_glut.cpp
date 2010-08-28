@@ -6,6 +6,8 @@
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 
+#define DEBUG 1
+
 void init(void)
 {
 	/* select clearing (background) color       */
@@ -23,6 +25,12 @@ void init(void)
  * Reads the contents of a file and stores them in a c_string. 
  * The c_string is allocated dynamically. If 
  * there is any error at any stage, a null c_string is returned.
+ * Input:	
+ *	The full path to a file (including the filename) as 
+ *	a std::string. Note that it is assumed that the file
+ *	is assumed to be plaintext. Also, if the filename alone
+ * 	is specified, it assumes that the file is in the current 
+ *	directory.
  * Returns: 
  *         A c style string with the contents of the shader's file.
  *	   A null string.
@@ -43,7 +51,7 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 		//Calculate the file's size in bytes
 		
 		//Move the get pointer to the end
-		shader_file.seekg(ios::end);
+		shader_file.seekg(0, ios::end);
 		//The position of the get pointer gives the number of bytes
 		file_size = shader_file.tellg();
 		if(file_size != -1)
@@ -55,21 +63,34 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 			shader_source_code = new GLchar[file_size];
 			
 			//Send the get pointer back to the beginning.
-			shader_file.seekg(ios::beg);
+			shader_file.seekg(0, ios::beg);
 			
 			//Read the file into the source code buffer.
+			int i;	//Gives the position in the buffer to write the 
+				//next character to.
 			while(!shader_file.eof())
 			{
-				
+				/* TODO: See if the other ways to read data are
+				 * better.
+				 */
+				/* Get the next character and write it to 
+				 * the buffer. 
+				 */				
+				shader_file.get(&shader_source_code[i]);
+				//Step to te next position in the buffer.
+				i++;
 			}
 		}
 			
 	}
 	
-	//Convert the stuff that has been read to a char pointer.
 	//Close the file.
 	shader_file.close();
+	#ifdef DEBUG
+	std::cout << shader_source_code;
+	#endif
 	//Return the said pointer.
+	return shader_source_code;
 }
 
 void display(void)
@@ -156,6 +177,8 @@ void display(void)
 	GLuint shader_program;
 
 	//Obtain the source for the shader programs.
+	vertex_source = file_to_char_pointer("first_vertex_shader.glsl");
+	fragment_source = file_to_char_pointer("first_fragment_shader.glsl");
 	
 	//Obtain the name for the shader program.
 	shader_program = glCreateProgram();
