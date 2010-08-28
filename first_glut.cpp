@@ -14,7 +14,7 @@
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 
-#define DEBUG 1
+//#define DEBUG 1
 
 void init()
 {
@@ -242,9 +242,10 @@ void display(void)
 		glDeleteBuffers(2, vbo_names);
 		glDeleteVertexArrays(1, &vao_name);
 		
-		delete vertex_source;
-		delete fragment_source;	
 	}
+
+	delete vertex_source;
+	delete fragment_source;	
 }
 
 int main(int argc, char** argv)
@@ -260,7 +261,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(250, 250);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("hello");
+	glutCreateWindow("Hello");
 	init();
 	glutDisplayFunc(display);
 	glutMainLoop();

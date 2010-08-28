@@ -1,5 +1,7 @@
 precision highp float;
 
+out vec4 gl_FragColor;
+
 void main(void)
 {
 	//Set the colour to white.
