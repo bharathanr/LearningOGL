@@ -9,10 +9,13 @@ void init(void)
 {
 	/* select clearing (background) color       */
 	glClearColor(0.0, 0.0, 0.0, 0.0);
+
 	/*  initialize viewing values */
+	/*
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
+	*/
 }
 
 void display(void)
@@ -64,17 +67,17 @@ void display(void)
 	//Bind the first vbo and indicate that it contains vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
-	/*TODO: See if there is a better spec for vbo access 
-	 *than GL_STATIC_DRAW
+	/* TODO: See if there is a better spec for vbo access 
+	 * than GL_STATIC_DRAW
 	 */
 	
 	//Copy the vertex data from the square array to this buffer 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 12, square,\
 			 GL_STATIC_DRAW);
 	
-	/*Specify that the vertex data is going into vertex attribute zero.
-	 *in the vertex attribute array. Enable the corresponding attribute 
-	 *in the array.
+	/* Specify that the vertex data is going into vertex attribute zero.
+	 * in the vertex attribute array. Enable the corresponding attribute 
+	 * in the array.
 	 */
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
@@ -86,9 +89,9 @@ void display(void)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * 6, \
 			 square_indices, GL_STATIC_DRAW);
 	
-	/*Specify that the index data is going into vertex attribute one
-	 *n the vertex attribute array. Enable the corresponding attribute 
-	 *in the array.
+	/* Specify that the index data is going into vertex attribute one
+	 * n the vertex attribute array. Enable the corresponding attribute 
+	 * in the array.
 	 */
 	glVertexAttribPointer(1, 1, GLint, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
@@ -107,6 +110,29 @@ void display(void)
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
+	//Set the source code of the shaders.
+	glShaderSource(vertex_shader, 1, &vertexsource, NULL); 
+							//Strings \0 terminated
+	glShaderSource(fragment_shader, 1, &fragmentsource, NULL);
+	
+	//Compile the shaders
+	glCompileShader(vertex_shader);
+	glCompileShader(fragment_shader);
+	
+	//Attach the shaders to the program
+	/* TODO: Figure out these lines carefully. Is the order of attaching
+	 * shaders important?
+	 */
+	glAttachShader(shader_program, vertex_shader);
+	glAttachShader(shader_program, fragment_shader);
+	
+	//Link the program
+	glLinkProgram(shader_program);
+
+	//TODO: Bind parameters to the shader.
+	
+	//Set this program as the active shader program
+	glUseProgram(shader_program);
 	/* don’t wait!
 	 * start processing buffered OpenGL routines
 	 */
