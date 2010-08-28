@@ -66,7 +66,7 @@ GLchar* file_to_char_pointer(std::string path_to_file)
 			shader_file.seekg(0, ios::beg);
 			
 			//Read the file into the source code buffer.
-			int i;	//Gives the position in the buffer to write the 
+			int i = 0;	//Gives the position in the buffer to write the 
 				//next character to.
 			while(!shader_file.eof())
 			{
@@ -106,7 +106,7 @@ void display(void)
 	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
 				 0.25, 0.75, 0.0};
 	//Indices assume GL_TRIANGLES  TODO-- check!
-	GLint square_indices = {1, 2, 3, 1, 4, 3};
+	GLuint square_indices = {1, 2, 3, 1, 4, 3};
 	//FFP
 	/*	
 	glBegin(GL_POLYGON);
@@ -161,7 +161,7 @@ void display(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
 	
 	//Copy the index data to the second vbo
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * 6, \
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6, \
 			 square_indices, GL_STATIC_DRAW);
 	
 	/* Specify that the index data is going into vertex attribute one
@@ -206,14 +206,17 @@ void display(void)
 	//Link the program
 	glLinkProgram(shader_program);
 
-	//TODO: Bind parameters to the shader.
-	
+	//Bind parameters to the shader.
+	glBindAttribLocation(shader_program, 0, "in_position");	
+
 	//Set this program as the active shader program
 	glUseProgram(shader_program);
-	/* don’t wait!
-	 * start processing buffered OpenGL routines
-	 */
-	glFlush();
+
+	//Draw code.
+	glDrawElements(GL_TRIANGLES, 6,\
+			 GL_UNSIGNED_INT, );
+
+	//Do cleanup. :)
 }
 
 int main(int argc, char** argv)
