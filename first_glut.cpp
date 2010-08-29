@@ -14,7 +14,7 @@
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 
-//#define DEBUG 1
+#define DEBUG 1
 
 void init()
 {
@@ -112,10 +112,8 @@ void display(void)
 	 */
 	//glColor3f(1.0, 1.0, 1.0);
 	
-	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
-				 0.25, 0.75, 0.0};
-	//Indices assume GL_TRIANGLES  TODO-- check!
-	GLuint square_indices[] = {1, 2, 3, 1, 4, 3};
+	//GLfloat vertex_buffer[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
+	//			 0.25, 0.75, 0.0};
 	//FFP
 	/*	
 	glBegin(GL_POLYGON);
@@ -134,7 +132,40 @@ void display(void)
 	glDrawArrays(GL_QUADS, 0, 4);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
+	
+	//Draw code for OGL 3.2
+	//TODO Hope this works
+	glDrawElements(GL_TRIANGLES, 6,\
+			GL_UNSIGNED_INT, 0);
 
+		
+
+}
+
+int main(int argc, char** argv)
+{
+	//The order of initialisation may be wrong. TODO check.
+
+	//For OGL3.2
+	glutInitContextVersion (3, 2);
+	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
+	//Usual glut code
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	#ifdef DEBUG
+	//TODO: Check if freeglut is at least at version 2.60 (?)
+	std::cout<< "Glut version:" << glutGet(GLUT_VERSION) << std::endl;
+	#endif
+	glutInitWindowSize(250, 250);
+	glutInitWindowPosition(100, 100);
+	glutCreateWindow("Hello");
+	init();
+	
+	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
+				 0.25, 0.75, 0.0};
+	//Indices assume GL_TRIANGLES  TODO-- check!
+	GLuint square_indices[] = {1, 2, 3, 1, 4, 3};
 	//Using VBO's and VAO's
 	
 	//Generate the name for a Vertex Array
@@ -225,21 +256,21 @@ void display(void)
 		//Set this program as the active shader program
 		glUseProgram(shader_program);
 		
-		//Draw code.
-		//TODO Hope this works
-		glDrawElements(GL_TRIANGLES, 6,\
-				 GL_UNSIGNED_INT, 0);
-
-		//Do cleanup.
-		glUseProgram(0);
-		glDetachShader(shader_program, vertex_shader);
-		glDetachShader(shader_program, fragment_shader);
-		glDeleteProgram(shader_program);
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
-		
 	}
 
+	glutDisplayFunc(display);
+	glutMainLoop();
+	
+	//Do cleanup.
+	/*
+	 * CAUTION: Assumes that all the things that are cleaned up exist in the first place. This may not be true.
+	*/
+	glUseProgram(0);
+	glDetachShader(shader_program, vertex_shader);
+	glDetachShader(shader_program, fragment_shader);
+	glDeleteProgram(shader_program);
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDeleteBuffers(2, vbo_names);
@@ -247,24 +278,6 @@ void display(void)
 
 	delete vertex_source;
 	delete fragment_source;	
-}
-
-int main(int argc, char** argv)
-{
-	//The order of initialisation may be wrong. TODO check.
-
-	//For OGL3.2
-	glutInitContextVersion (3, 2);
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
-	//Usual glut code
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(250, 250);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Hello");
-	init();
-	glutDisplayFunc(display);
-	glutMainLoop();
+	
 	return 0;
 }
