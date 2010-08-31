@@ -1,20 +1,19 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 //For OGL 3.2
-#define GL3_PROTOTYPES
+#define GL3_PROTOTYPES 1
 #include "GL3/gl3.h"
-#define __gl_h_
 
-#include "GL/freeglut.h"
+#include "GL/glut.h"
+#include "GL/freeglut_ext.h"
 
 
 //Freeglut pulls these in anyway
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 
-#define DEBUG 1
+//#define DEBUG 1
 
 void init()
 {
@@ -138,6 +137,7 @@ void display(void)
 	glDrawElements(GL_TRIANGLES, 6,\
 			GL_UNSIGNED_INT, 0);
 
+	glFlush();
 		
 
 }
@@ -148,7 +148,6 @@ int main(int argc, char** argv)
 
 	//For OGL3.2
 	glutInitContextVersion (3, 2);
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	//Usual glut code
 	glutInit(&argc, argv);
@@ -165,7 +164,7 @@ int main(int argc, char** argv)
 	GLfloat square[] = {0.25, 0.25, 0.0, 0.75, 0.25, 0.0, 0.75, 0.75, 0.0,\
 				 0.25, 0.75, 0.0};
 	//Indices assume GL_TRIANGLES  TODO-- check!
-	GLuint square_indices[] = {1, 2, 3, 1, 4, 3};
+	GLuint square_indices[] = {0, 3, 2, 2, 1, 0};
 	//Using VBO's and VAO's
 	
 	//Generate the name for a Vertex Array
